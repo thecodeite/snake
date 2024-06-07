@@ -6,7 +6,8 @@ function App() {
 
   return (
     <>
-      <pre style={{lineHeight: 0.8, border: '1px solid white'}}>{snake}</pre>
+      <a href="https://github.com/thecodeite/snake">https://github.com/thecodeite/snake</a>
+      <pre style={{lineHeight: 0.8, border: '1px solid white', width: 'min-content', margin: '1em auto'}}>{snake}</pre>
     </>
   )
 }
