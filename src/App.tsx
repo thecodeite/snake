@@ -1,13 +1,16 @@
-import { useEffect, useState } from 'react';
+import { RefCallback, useEffect, useState } from 'react';
+import { useSwipeable } from 'react-swipeable';
 import './App.css'
 
 function App() {
-  const snake = useSnake();
+  const map = useSnake();
 
+  
+  
   return (
     <>
       <a href="https://github.com/thecodeite/snake">https://github.com/thecodeite/snake</a>
-      <pre style={{lineHeight: 0.8, border: '1px solid white', width: 'min-content', margin: '1em auto'}}>{snake}</pre>
+      <pre style={{lineHeight: 0.8, border: '1px solid white', width: 'min-content', margin: '1em auto'}}>{map}</pre>
     </>
   )
 }
@@ -55,7 +58,25 @@ function useSnake() {
 
   const map = Array.from({ length: height }).map((_, y) => Array.from({ length: width }).map((_, x) => render(x,y)));
 
+
+
+  const { ref } = useSwipeable({
+    onSwipedLeft: () => setState((state) => ({ ...state, direction: { x: -1, y: 0 } })),
+    onSwipedRight: () => setState((state) => ({ ...state, direction: { x: 1, y: 0 } })),
+    onSwipedUp: () => setState((state) => ({ ...state, direction: { x: 0, y: -1 } })),
+    onSwipedDown: () => setState((state) => ({ ...state, direction: { x: 0, y: 1 } })),
+  }) as { ref: RefCallback<Document> };
+  
   useEffect(() => {
+    ref(document);
+    // Clean up swipeable event listeners
+    return () => ref(null);
+  });
+
+  useEffect(() => {
+    
+  
+
     document.addEventListener('keydown', (e) => {
       if (e.key === 'ArrowUp') {
         setState((state) => ({ ...state, direction: { x: 0, y: -1 } }));
@@ -113,10 +134,13 @@ function useSnake() {
       });
     }, 250);
 
-    return () => clearInterval(handle);
+    return () => {
+      clearInterval(handle); 
+    }
   }, []);
 
-  return map.map(row => row.join('')).join('\n');
+  return  map.map(row => row.join('')).join('\n')
+   
 }
 
 export default App
